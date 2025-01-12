@@ -4,6 +4,7 @@ import (
 	"container/list"
 	"errors"
 	"fmt"
+	"strings"
 )
 
 var (
@@ -105,13 +106,16 @@ func (c *Cache[K, V]) Items() []Item[K, V] {
 	return items
 }
 
-// Print outputs the current cache state, showing each key's value and visited status
-func (c *Cache[K, V]) Print() {
+// String outputs the current cache state, showing each key's value and visited status
+func (c *Cache[K, V]) String() string {
+	var sb strings.Builder
+	sb.WriteString(fmt.Sprintf("Cache [Capacity: %d, Size: %d]\n", c.Capacity(), c.Size()))
+
 	for curr := c.q.Front(); curr != nil; curr = curr.Next() {
 		ele := curr.Value.(*nodeEntry[K, V])
-		fmt.Printf("%s: %v\t", ele.value, ele.visited)
+		sb.WriteString(fmt.Sprintf("Key: %v, Value: %v, Visited: %t\n", ele.key, ele.value, ele.visited))
 	}
-	fmt.Println("\n")
+	return sb.String()
 }
 
 // Clear resets the cache to its initial empty state
